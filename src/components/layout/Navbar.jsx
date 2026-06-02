@@ -109,7 +109,8 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-ink/30 backdrop-blur-sm z-50 lg:hidden"
+              className="fixed inset-0 backdrop-blur-sm z-50 lg:hidden"
+              style={{ backgroundColor: 'rgba(28, 25, 23, 0.4)' }}
               onClick={() => setMobileOpen(false)}
             />
             <motion.div
@@ -117,7 +118,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed inset-0 bg-canvas z-50 lg:hidden flex flex-col"
+              className="fixed top-0 right-0 h-full w-80 max-w-[85vw] z-50 shadow-2xl lg:hidden flex flex-col"
               style={{ backgroundColor: '#FAFAF8' }}
             >
               <div className="flex items-center justify-between p-6 border-b border-border">
