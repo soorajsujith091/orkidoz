@@ -119,53 +119,54 @@ export default function Navbar() {
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
               className="fixed top-0 right-0 h-full w-80 max-w-[85vw] z-50 shadow-2xl lg:hidden flex flex-col"
-              style={{ backgroundColor: '#FAFAF8' }}
             >
-              <div className="flex items-center justify-between p-6 border-b border-border">
-                <div className="flex items-center">
-                  <img
-                    src="/002-png-SmallO-e1759221054651.png"
-                    alt="Orkidoz"
-                    className="h-9 w-auto object-contain"
-                  />
-                </div>
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  className="p-2 text-muted hover:text-ink transition-colors cursor-pointer"
-                  aria-label="Close menu"
-                >
-                  <X size={22} />
-                </button>
-              </div>
-
-              <div className="flex-1 flex flex-col gap-1 p-6 pt-8">
-                {navLinks.map(link => (
-                  <NavLink
-                    key={link.to}
-                    to={link.to}
+              <div className="w-full h-full bg-[#FAFAF8] flex flex-col">
+                <div className="flex items-center justify-between p-6 border-b border-border">
+                  <div className="flex items-center">
+                    <img
+                      src="/002-png-SmallO-e1759221054651.png"
+                      alt="Orkidoz"
+                      className="h-9 w-auto object-contain"
+                    />
+                  </div>
+                  <button
                     onClick={() => setMobileOpen(false)}
-                    className={({ isActive }) =>
-                      `text-[20px] font-display py-2 transition-colors duration-200 ${
-                        isActive ? 'text-sage' : 'text-ink hover:text-sage'
-                      }`
-                    }
+                    className="p-2 text-muted hover:text-ink transition-colors cursor-pointer"
+                    aria-label="Close menu"
                   >
-                    {link.label}
-                  </NavLink>
-                ))}
-              </div>
+                    <X size={22} />
+                  </button>
+                </div>
 
-              <div className="p-6 border-t border-border">
-                <div className="flex items-center gap-4">
-                  <a href="#" className="text-muted hover:text-ink transition-colors" aria-label="Facebook">
-                    <FacebookIcon size={20} />
-                  </a>
-                  <a href="#" className="text-muted hover:text-ink transition-colors" aria-label="Instagram">
-                    <InstagramIcon size={20} />
-                  </a>
-                  <a href="#" className="text-muted hover:text-ink transition-colors" aria-label="YouTube">
-                    <YoutubeIcon size={20} />
-                  </a>
+                <div className="flex-1 flex flex-col gap-1 p-6 pt-8">
+                  {navLinks.map(link => (
+                    <NavLink
+                      key={link.to}
+                      to={link.to}
+                      onClick={() => setMobileOpen(false)}
+                      className={({ isActive }) =>
+                        `text-[20px] font-display py-2 transition-colors duration-200 ${
+                          isActive ? 'text-sage' : 'text-ink hover:text-sage'
+                        }`
+                      }
+                    >
+                      {link.label}
+                    </NavLink>
+                  ))}
+                </div>
+
+                <div className="p-6 border-t border-border">
+                  <div className="flex items-center gap-4">
+                    <a href="#" className="text-muted hover:text-ink transition-colors" aria-label="Facebook">
+                      <FacebookIcon size={20} />
+                    </a>
+                    <a href="#" className="text-muted hover:text-ink transition-colors" aria-label="Instagram">
+                      <InstagramIcon size={20} />
+                    </a>
+                    <a href="#" className="text-muted hover:text-ink transition-colors" aria-label="YouTube">
+                      <YoutubeIcon size={20} />
+                    </a>
+                  </div>
                 </div>
               </div>
             </motion.div>
