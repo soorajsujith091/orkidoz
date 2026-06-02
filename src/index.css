@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════
+   ORKIDOZ — Custom Theme (Tailwind CSS v4)
+   ═══════════════════════════════════════════ */
+
+@theme {
+  /* Colors */
+  --color-canvas: #FAFAF8;
+  --color-surface: #F4F1EC;
+  --color-ink: #1C1917;
+  --color-sage: #4A6741;
+  --color-sage-dark: #3a5332;
+  --color-sage-lt: #EBF0E8;
+  --color-muted: #78716C;
+  --color-gold: #B8863F;
+  --color-border: #E8E3DC;
+
+  /* Fonts */
+  --font-display: 'Cormorant Garamond', serif;
+  --font-sans: 'Inter', sans-serif;
+
+  /* Font sizes */
+  --text-hero: clamp(48px, 7vw, 88px);
+  --text-h1: clamp(36px, 5vw, 64px);
+  --text-h2: clamp(28px, 3.5vw, 44px);
+
+  /* Animations */
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-marquee-fast: marquee 20s linear infinite;
+}
+
+/* ═══════════════════════════════════════════
+   Base Styles
+   ═══════════════════════════════════════════ */
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-ink);
+    background-color: var(--color-canvas);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+  }
+
+  ::selection {
+    background-color: var(--color-sage-lt);
+    color: var(--color-ink);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   Custom Utilities
+   ═══════════════════════════════════════════ */
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .text-hero {
+    font-size: var(--text-hero);
+  }
+
+  .text-h1 {
+    font-size: var(--text-h1);
+  }
+
+  .text-h2 {
+    font-size: var(--text-h2);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   Keyframes
+   ═══════════════════════════════════════════ */
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ═══════════════════════════════════════════
+   Scrollbar
+   ═══════════════════════════════════════════ */
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
