@@ -125,7 +125,7 @@ export default function Footer() {
             © 2026 Orkidoz. All Rights Reserved.
           </p>
           <p className="text-[11px] text-muted">
-            Made with ♥ in India
+            Made with ♥ Creatox
           </p>
         </div>
       </div>
