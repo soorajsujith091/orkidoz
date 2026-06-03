@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { Leaf, Scissors, Package, ShieldCheck, Heart, Minus, Plus } from 'lucide-react';
+import { Leaf, Scissors, Package, ShieldCheck, Heart, Minus, Plus, Type, CheckSquare } from 'lucide-react';
 import { products } from '../data/products';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -11,6 +11,26 @@ import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Accordion from '../components/ui/Accordion';
 import ProductCard from '../components/ui/ProductCard';
+
+const colors = [
+  { name: 'Cream', hex: '#E8E3DC' },
+  { name: 'Sage', hex: '#4A6741' },
+  { name: 'Brown', hex: '#8C6D58' },
+  { name: 'Gold', hex: '#B8863F' },
+  { name: 'Slate', hex: '#78716C' },
+];
+
+const fonts = [
+  { id: 'script', name: 'Script', class: 'font-script' },
+  { id: 'serif', name: 'Classic', class: 'font-display' },
+  { id: 'sans', name: 'Modern', class: 'font-sans' },
+];
+
+const placements = [
+  { id: 'center', label: 'Center' },
+  { id: 'left', label: 'Left Chest' },
+  { id: 'right', label: 'Right Chest' },
+];
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -21,6 +41,13 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState('');
   const [qty, setQty] = useState(1);
   const [mainImageIdx, setMainImageIdx] = useState(0);
+  
+  // Customization State
+  const [customName, setCustomName] = useState('');
+  const [selectedColor, setSelectedColor] = useState(colors[1]);
+  const [selectedFont, setSelectedFont] = useState(fonts[0]);
+  const [selectedPlacement, setSelectedPlacement] = useState(placements[0]);
+  const [activeTab, setActiveTab] = useState('name');
 
   const wishlisted = product ? isWishlisted(product.id) : false;
   const discount = product ? product.original - product.price : 0;
@@ -110,20 +137,45 @@ export default function ProductDetail() {
       <section className="py-12 lg:py-16 bg-canvas" aria-label="Product details">
         <div className="max-w-[1200px] mx-auto px-6 lg:px-8 xl:px-0">
           <div className="flex flex-col lg:flex-row gap-10 lg:gap-12">
-            {/* Left — Gallery */}
+            {/* Left — Gallery with Preview */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
               className="lg:w-[52%]"
             >
-              <div className="aspect-square bg-surface rounded-2xl overflow-hidden group relative">
+              <div className="aspect-square bg-surface rounded-2xl overflow-hidden group relative flex items-center justify-center">
                 {product.images && product.images[mainImageIdx] ? (
-                  <img
-                    src={product.images[mainImageIdx]}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                  <>
+                    <img
+                      src={product.images[mainImageIdx]}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 mix-blend-multiply"
+                    />
+                    
+                    {/* Live Customization Preview Overlay */}
+                    {customName && mainImageIdx === 0 && (
+                      <div 
+                        className="absolute text-center pointer-events-none select-none transition-all duration-300 z-10"
+                        style={{ 
+                          color: selectedColor.hex,
+                          top: selectedPlacement.id === 'center' ? '32%' : '30%',
+                          left: selectedPlacement.id === 'left' ? '65%' : selectedPlacement.id === 'right' ? '35%' : '50%',
+                          transform: 'translate(-50%, -50%)',
+                          textShadow: '0px 1px 2px rgba(0,0,0,0.1)'
+                        }}
+                      >
+                        <span className={`text-[16px] sm:text-[22px] md:text-[28px] tracking-wide ${selectedFont.class} block leading-none`}>
+                          {customName}
+                        </span>
+                        {selectedPlacement.id === 'center' && (
+                          <span className="text-[6px] sm:text-[8px] md:text-[10px] tracking-[0.2em] font-sans uppercase opacity-85 block mt-0.5">
+                            ♥
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-[#F4F1EC] to-[#E8E0D5] flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
                     <div className="text-center px-8">
@@ -155,12 +207,12 @@ export default function ProductDetail() {
               )}
             </motion.div>
 
-            {/* Right — Info */}
+            {/* Right — Info & Customization */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="lg:w-[48%] lg:sticky lg:top-24 self-start"
+              className="lg:w-[48%] self-start"
             >
               {/* Breadcrumb */}
               <nav className="text-[11px] text-muted" aria-label="Breadcrumb">
@@ -192,8 +244,119 @@ export default function ProductDetail() {
 
               <hr className="border-border mt-6" />
 
+              {/* Customizer Panel */}
+              <div className="mt-8 bg-[#fcfaf7] shadow-sm border border-border/60 rounded-xl overflow-hidden">
+                <div className="flex bg-[#f4f0e6]/50">
+                  <button 
+                    onClick={() => setActiveTab('name')}
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors ${
+                      activeTab === 'name' ? 'bg-[#fcfaf7] text-ink shadow-[0_-2px_0_0_#4A6741_inset]' : 'text-muted hover:text-ink'
+                    }`}
+                  >
+                    <Type size={14} /> Add Name
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('initials')}
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors ${
+                      activeTab === 'initials' ? 'bg-[#fcfaf7] text-ink shadow-[0_-2px_0_0_#4A6741_inset]' : 'text-muted hover:text-ink'
+                    }`}
+                  >
+                    <CheckSquare size={14} /> Add Initials
+                  </button>
+                </div>
+
+                <div className="p-5 sm:p-6 space-y-5">
+                  {/* Name input */}
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-[0.15em] text-ink mb-2">
+                      Personalization
+                    </label>
+                    <input
+                      type="text"
+                      maxLength={12}
+                      value={customName}
+                      onChange={(e) => setCustomName(e.target.value.toLowerCase())}
+                      placeholder={activeTab === 'name' ? "Enter baby's name" : "Enter initials"}
+                      className="w-full border border-border bg-white rounded-md px-4 py-2.5 text-[13px] text-ink placeholder:text-muted/40 focus:outline-none focus:border-sage transition-colors shadow-sm"
+                    />
+                  </div>
+
+                  {/* Thread Color */}
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-[0.15em] text-ink mb-2">
+                      Thread Color: <span className="text-muted font-normal normal-case ml-1">{selectedColor.name}</span>
+                    </label>
+                    <div className="flex gap-2.5 flex-wrap">
+                      {colors.map((c) => (
+                        <button
+                          key={c.name}
+                          onClick={() => setSelectedColor(c)}
+                          className={`w-7 h-7 rounded-full border-2 transition-all flex items-center justify-center shadow-sm ${
+                            selectedColor.name === c.name ? 'border-sage scale-110' : 'border-transparent'
+                          }`}
+                          style={{ backgroundColor: c.hex }}
+                          title={c.name}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Font Style */}
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-[0.15em] text-ink mb-2">
+                      Font Style
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {fonts.map((f) => (
+                        <button
+                          key={f.id}
+                          onClick={() => setSelectedFont(f)}
+                          className={`border rounded-lg p-2.5 text-center transition-all bg-white shadow-sm ${
+                            selectedFont.id === f.id
+                              ? 'border-sage ring-1 ring-sage text-sage'
+                              : 'border-border text-muted hover:border-muted'
+                          }`}
+                        >
+                          <span className={`text-[16px] leading-none ${f.class}`}>Aa</span>
+                          <span className="block text-[8px] font-bold uppercase tracking-[0.1em] mt-1.5">{f.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Placement */}
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-[0.15em] text-ink mb-2">
+                      Placement
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {placements.map((p) => (
+                        <button
+                          key={p.id}
+                          onClick={() => setSelectedPlacement(p)}
+                          className={`border rounded-lg p-2.5 flex justify-center transition-all bg-white shadow-sm ${
+                            selectedPlacement.id === p.id
+                              ? 'border-sage ring-1 ring-sage'
+                              : 'border-border opacity-70 hover:opacity-100'
+                          }`}
+                          title={p.label}
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={`w-6 h-6 ${selectedPlacement.id === p.id ? 'text-sage' : 'text-muted'}`}>
+                            <rect x="5" y="4" width="14" height="16" rx="2" />
+                            <path d="M9 4v3h6V4" />
+                            {p.id === 'center' && <circle cx="12" cy="11" r="1.5" fill="currentColor" />}
+                            {p.id === 'left' && <circle cx="15" cy="11" r="1.5" fill="currentColor" />}
+                            {p.id === 'right' && <circle cx="9" cy="11" r="1.5" fill="currentColor" />}
+                          </svg>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Size */}
-              <div className="mt-6">
+              <div className="mt-8">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">Size</p>
                 <div className="flex gap-2 flex-wrap mt-3">
                   {product.sizes.map(size => (
