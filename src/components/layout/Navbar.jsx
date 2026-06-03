@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Heart, User, ShoppingBag, Menu, X, Leaf } from 'lucide-react';
+import { Search, Heart, User, ShoppingBag, Menu, X, ChevronDown } from 'lucide-react';
 import { FacebookIcon, InstagramIcon, YoutubeIcon } from '../ui/SocialIcons';
 import { useScrollY } from '../../hooks/useScrollY';
 import { useCart } from '../../contexts/CartContext';
 import { useWishlist } from '../../contexts/WishlistContext';
 
 const navLinks = [
-  { to: '/', label: 'Home' },
+  { to: '/shop', label: 'Shop', hasDropdown: true },
+  { to: '/shop', label: 'Customize' },
+  { to: '/shop', label: 'Collections' },
   { to: '/about-us', label: 'About Us' },
-  { to: '/shop', label: 'Shop' },
-  { to: '/contact-us', label: 'Contact Us' },
+  { to: '/contact-us', label: 'Journal' },
 ];
 
 export default function Navbar() {
@@ -31,54 +32,56 @@ export default function Navbar() {
       role="navigation"
       aria-label="Main navigation"
     >
-      <div className="max-w-[1200px] mx-auto px-6 lg:px-8 xl:px-0">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-0">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center flex-shrink-0" aria-label="Orkidoz Home">
-            <img
-              src="/002-png-SmallO-e1759221054651.png"
-              alt="Orkidoz"
-              className="h-12 lg:h-14 w-auto object-contain"
-            />
+            <div className="flex flex-col items-start">
+              <img
+                src="/002-png-SmallO-e1759221054651.png"
+                alt="Orkidoz"
+                className="h-10 lg:h-12 w-auto object-contain"
+              />
+              <span className="text-[7px] lg:text-[8px] uppercase tracking-[0.2em] text-muted -mt-0.5 hidden sm:block">
+                Nurture · Discover · Grow
+              </span>
+            </div>
           </Link>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden lg:flex items-center gap-8">
+          {/* Desktop Nav Links — Centered */}
+          <div className="hidden lg:flex items-center gap-7">
             {navLinks.map(link => (
               <NavLink
-                key={link.to}
+                key={link.label}
                 to={link.to}
                 className={({ isActive }) =>
-                  `text-[14px] font-sans transition-colors duration-200 ${
+                  `text-[13px] font-medium uppercase tracking-[0.08em] transition-colors duration-200 flex items-center gap-1 ${
                     isActive
-                      ? 'text-sage underline underline-offset-4 decoration-1'
+                      ? 'text-ink underline underline-offset-8 decoration-1'
                       : 'text-ink hover:text-sage'
                   }`
                 }
               >
                 {link.label}
+                {link.hasDropdown && <ChevronDown size={14} className="text-muted" />}
               </NavLink>
             ))}
           </div>
 
           {/* Right Icons */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button className="p-2 text-ink hover:text-sage transition-colors cursor-pointer" aria-label="Search">
               <Search size={20} />
             </button>
 
-            <Link to="/wishlist" className="p-2 text-ink hover:text-sage transition-colors relative" aria-label="Wishlist">
-              <Heart size={20} />
+            <Link to="/wishlist" className="p-2 text-ink hover:text-sage transition-colors relative hidden sm:block" aria-label="Wishlist">
+              <User size={20} />
               {wishlistCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-sage text-white text-[10px] rounded-full flex items-center justify-center font-medium">
                   {wishlistCount}
                 </span>
               )}
             </Link>
-
-            <button className="p-2 text-ink hover:text-sage transition-colors cursor-pointer hidden sm:block" aria-label="Account">
-              <User size={20} />
-            </button>
 
             <Link to="/cart" className="p-2 text-ink hover:text-sage transition-colors relative" aria-label="Shopping cart">
               <ShoppingBag size={20} />
@@ -141,7 +144,7 @@ export default function Navbar() {
                 <div className="flex-1 flex flex-col gap-1 p-6 pt-8">
                   {navLinks.map(link => (
                     <NavLink
-                      key={link.to}
+                      key={link.label}
                       to={link.to}
                       onClick={() => setMobileOpen(false)}
                       className={({ isActive }) =>

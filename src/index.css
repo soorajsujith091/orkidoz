@@ -15,10 +15,12 @@
   --color-muted: #78716C;
   --color-gold: #B8863F;
   --color-border: #E8E3DC;
+  --color-warm: #F0EBE3;
 
   /* Fonts */
   --font-display: 'Cormorant Garamond', serif;
   --font-sans: 'Inter', sans-serif;
+  --font-script: 'Dancing Script', cursive;
 
   /* Font sizes */
   --text-hero: clamp(48px, 7vw, 88px);
@@ -72,6 +74,10 @@
     font-family: var(--font-display);
   }
 
+  .font-script {
+    font-family: var(--font-script);
+  }
+
   .text-hero {
     font-size: var(--text-hero);
   }
@@ -105,3 +111,12 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

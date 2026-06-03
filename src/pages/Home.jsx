@@ -1,11 +1,7 @@
-import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Leaf, Heart, Gem, Sparkles, Star, ArrowRight, ChevronLeft, ChevronRight, Scissors, ShieldCheck } from 'lucide-react';
-import Button from '../components/ui/Button';
-import ProductCard from '../components/ui/ProductCard';
-import { products } from '../data/products';
+import { Leaf, Heart, Gem, Sparkles, Scissors, ShieldCheck, ArrowRight } from 'lucide-react';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -13,45 +9,74 @@ const fadeUp = {
 };
 
 const stagger = {
-  visible: { transition: { staggerChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.12 } },
 };
 
-const marqueeItems = [
-  'Organic Cotton', 'Custom Embroidery', 'Eco Packaging',
-  'GOTS Certified', 'Made in India', 'Sensory Friendly',
-];
+/* ═══ CUSTOM LINE-ART SVG ICONS ═══ */
+const LeafIcon = () => (
+  <svg viewBox="0 0 64 64" fill="none" stroke="#A88B6E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-12 h-12 mx-auto mb-4 text-[#A88B6E]">
+    <path d="M46 16c-3 1-9.5 5.5-14.5 11.5-6.5 8-11.5 18-12 21-.5 3 .5 4 1.5 4 3 0 12.5-4.5 20-11.5 7.5-7 11.5-14.5 12-19.5.5-5-2-9-7-10z" />
+    <path d="M19.5 52.5c2-2.5 5-7.5 8-12" />
+    <path d="M31.5 40.5c4-4 8.5-9 12.5-14" />
+    <path d="M26 44.5c-2.5-1-4-2.5-5-4" />
+    <path d="M32 37.5c-2.5-1.5-4-3.5-5-5.5" />
+    <path d="M36 32.5c2.5-1 4-2.5 5-4" />
+    <path d="M41 26.5c2.5-1.5 4-3.5 5-5.5" />
+  </svg>
+);
 
-const brandValues = [
-  { icon: Leaf, title: 'Pure & Safe', desc: 'GOTS-certified, non-toxic dyes' },
-  { icon: Heart, title: 'Made with Love', desc: 'Small batches, fair practices' },
-  { icon: Gem, title: 'Built to Last', desc: 'Cherished as heirlooms' },
-  { icon: Sparkles, title: 'Made Personal', desc: 'Custom embroidery for every baby' },
-];
+const HandHeartIcon = () => (
+  <svg viewBox="0 0 64 64" fill="none" stroke="#A88B6E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-12 h-12 mx-auto mb-4 text-[#A88B6E]">
+    <path d="M32 24c-2.5-2.8-5-3-6.5-1.5-1.5 1.5-1 4 1 5.8l5.5 5.2 5.5-5.2c2-1.8 2.5-4.3 1-5.8s-4-1.3-6.5 1.5z" />
+    <path d="M18 36.5c2.5-1 5-.5 7.5.5 2.5 1 4 2.5 6 2.5s4-1 6-2c2-1 4-1 5.5 0c1.5 1 2 2.5 1.5 3.5s-2.5 1.5-4 1.5H20.5c-3 0-5.5-1.5-8-3l-4.5-3" />
+    <path d="M19.5 37.5c-1 1-1.8 2.2-2 3.5.5 1.5 1.5 2.5 2.5 3" />
+  </svg>
+);
 
-const testimonials = [
-  { quote: 'Orkidoz delivered exactly what we imagined and more. Sleek, modern and perfectly on-brand.', author: 'Ayesha K', role: 'Happy Parent' },
-  { quote: 'A smooth, inspiring experience. They listened and brought our ideas to life beautifully.', author: 'Rina S', role: 'Loving Mom' },
-  { quote: "The Orkidoz team's innovative approach made our project truly stand out.", author: 'Hira M', role: 'Proud Parent' },
+const NeedleIcon = () => (
+  <svg viewBox="0 0 64 64" fill="none" stroke="#A88B6E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-12 h-12 mx-auto mb-4 text-[#A88B6E]">
+    <path d="M48 16L18 46" />
+    <path d="M45.5 16.5l2 2" />
+    <path d="M46.5 17.5c3-3 6.5-3.5 7.5-2s-1 4.5-3.5 7-6 4-7.5 7c-1.5 3-.5 5 1.5 5s4.5-2 6-5" />
+  </svg>
+);
+
+const GiftIcon = () => (
+  <svg viewBox="0 0 64 64" fill="none" stroke="#A88B6E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-12 h-12 mx-auto mb-4 text-[#A88B6E]">
+    <path d="M19 28h26v22H19z" />
+    <path d="M17 24h30v4H17z" />
+    <path d="M32 24v26" />
+    <path d="M19 39h26" />
+    <path d="M32 24c-2.5-4.5-7.5-4.5-7.5-1 0 3 5 2.5 7.5 1" />
+    <path d="M32 24c2.5-4.5 7.5-4.5 7.5-1 0 3-5 2.5-7.5 1" />
+  </svg>
+);
+
+/* ═══ PROMISE VALUES DATA ═══ */
+const promiseValues = [
+  {
+    icon: <LeafIcon />,
+    title: 'Pure & Safe',
+    desc: 'We use GOTS-certified organic cotton and safe, non-toxic dyes that are gentle on delicate skin.',
+  },
+  {
+    icon: <HandHeartIcon />,
+    title: 'Ethically Made',
+    desc: 'Our pieces are crafted in small batches with care, ensuring fair practices and happy hands.',
+  },
+  {
+    icon: <NeedleIcon />,
+    title: 'Made to Last',
+    desc: 'Designed to be cherished, worn and passed down as beautiful heirlooms.',
+  },
+  {
+    icon: <GiftIcon />,
+    title: 'Made Personal',
+    desc: 'Because every baby is unique. We add the personal touch that makes each piece truly theirs.',
+  },
 ];
 
 export default function Home() {
-  const featured = products.slice(0, 10); // Show more items in the carousel
-  const carouselRef = useRef(null);
-
-  const scroll = (direction) => {
-    if (carouselRef.current) {
-      const { scrollLeft, clientWidth } = carouselRef.current;
-      const scrollTo = direction === 'left' 
-        ? scrollLeft - clientWidth * 0.75 
-        : scrollLeft + clientWidth * 0.75;
-      
-      carouselRef.current.scrollTo({
-        left: scrollTo,
-        behavior: 'smooth'
-      });
-    }
-  };
-
   return (
     <main>
       <Helmet>
@@ -62,8 +87,10 @@ export default function Home() {
         <link rel="canonical" href="https://orkidoz.com" />
       </Helmet>
 
-      {/* ══ HERO ══ */}
-      <section className="min-h-[92vh] flex items-center relative overflow-hidden bg-canvas" aria-label="Hero">
+      {/* ══════════════════════════════════════════════════════
+          SECTION 1: HERO — "Our Story"
+          ══════════════════════════════════════════════════════ */}
+      <section className="relative min-h-[75vh] lg:min-h-[88vh] flex items-center overflow-hidden bg-canvas" aria-label="Hero">
         {/* Full Bleed Background Image */}
         <div className="absolute inset-0 z-0">
           <img
@@ -72,238 +99,145 @@ export default function Home() {
             className="w-full h-full object-cover object-[70%_center] md:object-center"
           />
           {/* Editorial overlay for content readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-canvas via-canvas/90 to-canvas/40 md:from-canvas/95 md:via-canvas/80 md:to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-canvas via-canvas/95 to-canvas/30 md:from-canvas/95 md:via-canvas/85 md:to-transparent" />
         </div>
 
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-8 xl:px-0 w-full relative z-10">
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 w-full relative z-10">
           <div className="flex flex-col lg:flex-row items-center">
             {/* Left Content */}
             <motion.div
               variants={stagger}
               initial="hidden"
               animate="visible"
-              className="w-full lg:w-[58%] lg:pr-12 py-12 lg:py-20"
+              className="w-full lg:w-[50%] flex flex-col justify-center py-10 lg:py-16"
             >
               <motion.p
                 variants={fadeUp}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sage"
+                transition={{ duration: 0.6 }}
+                className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted"
               >
-                New Collection · 2025
+                Our Story
               </motion.p>
 
               <motion.h1
                 variants={fadeUp}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                className="font-display italic font-normal text-ink mt-4 leading-[1.05]"
-                style={{ fontSize: 'clamp(32px, 5.5vw, 56px)' }}
+                transition={{ duration: 0.6 }}
+                className="font-display text-ink mt-5 leading-[1.1]"
+                style={{ fontSize: 'clamp(32px, 4.5vw, 52px)' }}
               >
-                Soft,<br />planet-friendly<br />clothing.
+                Born from love.<br />
+                <span className="italic font-semibold">Made for little<br />beginnings.</span>
               </motion.h1>
 
               <motion.p
                 variants={fadeUp}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                className="max-w-[420px] text-muted text-[13px] leading-[1.8] mt-6"
+                transition={{ duration: 0.6 }}
+                className="max-w-[400px] text-muted text-[14px] leading-[1.8] mt-6"
               >
-                GOTS-certified organic cotton baby essentials.
-                Traditionally woven, breathable and safe for
-                delicate skin. Thoughtfully personalised.
+                Orkidoz was created with a simple belief – that babies deserve
+                the purest start, wrapped in softness, care and conscious choices.
               </motion.p>
 
               <motion.div
                 variants={fadeUp}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                className="flex flex-wrap gap-4 mt-10"
+                transition={{ duration: 0.6 }}
+                className="mt-10"
               >
-                <Link to="/shop">
-                  <Button variant="primary">Shop Now</Button>
+                <Link
+                  to="/about-us"
+                  className="inline-flex items-center gap-2 bg-sage hover:bg-sage-dark text-white px-8 py-3.5 rounded-full text-[12px] font-semibold uppercase tracking-[0.16em] transition-all duration-300"
+                >
+                  Our Journey <ArrowRight size={15} />
                 </Link>
-                <Link to="/about-us">
-                  <Button variant="outline">Our Story</Button>
-                </Link>
-              </motion.div>
-
-              <motion.div
-                variants={fadeUp}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                className="flex flex-wrap gap-6 mt-12"
-              >
-                {['GOTS Certified', 'Free Shipping ₹999+', 'Easy Returns'].map(t => (
-                  <span key={t} className="text-[12px] text-ink font-medium flex items-center gap-1.5">
-                    <span className="text-sage">✓</span> {t}
-                  </span>
-                ))}
               </motion.div>
             </motion.div>
 
-            {/* Right spacer to let the babies background show clearly on desktop */}
-            <div className="hidden lg:block lg:w-[42%] h-[400px]" />
+            {/* Right spacer to allow background babies to be visible on desktop */}
+            <div className="hidden lg:block lg:w-[50%] h-[400px]" />
           </div>
+        </div>
+
+        {/* Curved Wave Divider at the bottom */}
+        <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-10 pointer-events-none">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[40px] md:h-[60px] lg:h-[80px]">
+            <path d="M0,80 C150,40 350,40 600,95 C850,130 1050,70 1200,40 L1200,120 L0,120 Z" className="fill-canvas" />
+          </svg>
         </div>
       </section>
 
-      {/* ══ MARQUEE STRIP ══ */}
-      <section className="py-6 border-y border-border overflow-hidden" aria-label="Brand features">
-        <div className="flex animate-marquee-fast">
-          {[0, 1, 2].map(i => (
-            <div key={i} className="flex items-center gap-8 whitespace-nowrap mx-8">
-              {marqueeItems.map((item, j) => (
-                <span key={`${i}-${j}`} className="flex items-center gap-8">
-                  <span className="font-display italic text-[18px] text-ink">{item}</span>
-                  {j < marqueeItems.length - 1 && (
-                    <span className="w-1.5 h-1.5 bg-sage rounded-full flex-shrink-0" />
-                  )}
-                </span>
-              ))}
-              <span className="w-1.5 h-1.5 bg-sage rounded-full flex-shrink-0" />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ══ FEATURED PRODUCTS ══ */}
-      <section className="py-24 bg-canvas overflow-hidden" aria-label="Featured products">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-8 xl:px-0">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sage">
-                Our Highlights
-              </p>
-              <h2 className="font-display text-h2 text-ink mt-3 leading-[1.15]">
-                Thoughtfully crafted<br />for little ones.
-              </h2>
-            </div>
-            {/* Carousel Buttons */}
-            <div className="flex items-center gap-3 mt-6 sm:mt-0">
-              <button
-                onClick={() => scroll('left')}
-                className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-ink hover:bg-ink hover:text-white transition-all duration-300 cursor-pointer"
-                aria-label="Previous products"
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <button
-                onClick={() => scroll('right')}
-                className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-ink hover:bg-ink hover:text-white transition-all duration-300 cursor-pointer"
-                aria-label="Next products"
-              >
-                <ChevronRight size={20} />
-              </button>
-            </div>
-          </div>
-
-          {/* Slider Row */}
-          <div 
-            ref={carouselRef}
-            className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none pb-8 -mx-6 px-6 lg:-mx-8 lg:px-8 xl:-mx-0 xl:px-0"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {featured.map((product, i) => (
-              <div 
-                key={product.id} 
-                className="min-w-[280px] sm:min-w-[320px] max-w-[320px] snap-start flex-shrink-0"
-              >
-                <ProductCard product={product} index={i} />
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-6">
-            <Link to="/shop">
-              <Button variant="outline">
-                View All Products <ArrowRight size={16} />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ══ BRAND VALUES ══ */}
-      <section className="py-20 bg-surface" aria-label="Brand values">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-8 xl:px-0">
-          <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-border">
-            {brandValues.map((val, i) => {
-              const Icon = val.icon;
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.5 }}
-                  className="px-6 lg:px-10 py-8 text-center"
-                >
-                  <Icon size={28} className="text-sage mx-auto mb-4" />
-                  <h3 className="text-[14px] font-medium text-ink">{val.title}</h3>
-                  <p className="text-[13px] text-muted mt-2">{val.desc}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ══ STORY SNAPSHOT ══ */}
-      <section className="py-24 bg-canvas" aria-label="Our story">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-8 xl:px-0">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+      {/* ══════════════════════════════════════════════════════
+          SECTION 2: OUR JOURNEY
+          ══════════════════════════════════════════════════════ */}
+      <section className="py-10 sm:py-12 lg:py-16 bg-canvas" aria-label="Our Journey">
+        <div className="max-w-[1200px] mx-auto px-6 sm:px-8 lg:px-8 xl:px-0">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
             {/* Left text */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="lg:w-[45%]"
+              className="w-full lg:w-[42%]"
             >
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sage">
-                Our Story
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted">
+                Our Journey
               </p>
-              <h2 className="font-display text-h2 text-ink mt-3 leading-[1.15]">
-                Crafted with passion,<br />designed with purpose.
+              <h2
+                className="font-display text-ink mt-4 leading-[1.1]"
+                style={{ fontSize: 'clamp(28px, 3.5vw, 42px)' }}
+              >
+                It all started with<br />a mother's heart.
               </h2>
-              <p className="text-[15px] text-muted leading-[1.8] mt-6">
-                Orkidoz began with a heartfelt belief — that babies deserve
-                the gentlest touch. We craft each piece using GOTS-certified
-                organic cotton, traditionally woven and responsibly dyed.
-                Every stitch carries intention.
+              <p className="text-[14px] text-muted leading-[1.85] mt-6">
+                Like every parent, we wanted the very best for our little one. But when we looked for clothes that were truly gentle, thoughtfully made and free from harmful chemicals, we couldn't find enough choices that felt right.
               </p>
-              <div className="mt-8">
-                <Link to="/about-us">
-                  <Button variant="text">Read Our Full Story →</Button>
-                </Link>
+              <p className="text-[14px] text-muted leading-[1.85] mt-4">
+                That's when Orkidoz was born – out of a desire to create better. Better fabrics. Better choices. And pieces that hold more meaning.
+              </p>
+
+              {/* Founder Signature */}
+              <div className="mt-8 border-t border-border/50 pt-6">
+                <p className="font-script text-[22px] text-ink italic">
+                  Neha Agarwal
+                </p>
+                <p className="text-[12px] text-muted mt-1">
+                  – Founder, Orkidoz
+                </p>
               </div>
             </motion.div>
 
-            {/* Right image mosaic */}
+            {/* Right image grid */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="lg:w-[55%]"
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="w-full lg:w-[58%]"
             >
-              <div className="grid grid-cols-2 gap-4 h-[400px] lg:h-[480px]">
-                <div className="bg-surface rounded-2xl overflow-hidden row-span-2">
-                  <img
-                    src="/story-1.png"
-                    alt="Soft and natural organic baby clothes"
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="bg-[#E8E0D5] rounded-2xl overflow-hidden">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                {/* Top left — mother & baby (taller) */}
+                <div className="row-span-2 rounded-2xl overflow-hidden bg-surface">
                   <img
                     src="/story-2.png"
-                    alt="Organic cotton kids clothes collection"
+                    alt="Mother holding baby"
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
                 </div>
-                <div className="bg-[#DDD6CA] rounded-2xl overflow-hidden">
+                {/* Top right — folded clothes */}
+                <div className="rounded-2xl overflow-hidden bg-surface aspect-[4/3]">
                   <img
-                    src="/story-3.png"
-                    alt="Hand crafted baby embroidery clothing"
+                    src="/folded-clothes.png"
+                    alt="Folded organic baby clothes"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+                {/* Bottom right — organic cotton tag */}
+                <div className="rounded-2xl overflow-hidden bg-[#E8E0D5] aspect-[4/3]">
+                  <img
+                    src="/organic-tag.png"
+                    alt="Made with Organic Cotton"
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
@@ -314,73 +248,127 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══ CRAFTED WITH CARE (EMBROIDERY & VALUES) ══ */}
-      <section className="py-24 bg-canvas border-t border-border/40" aria-label="Crafted with care">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-8 xl:px-0">
-          <div className="flex flex-col lg:flex-row items-stretch gap-10 lg:gap-16">
-            
-            {/* Left embroidery image */}
+      {/* ══════════════════════════════════════════════════════
+          SECTION 3: OUR PROMISE
+          ══════════════════════════════════════════════════════ */}
+      <section className="py-10 sm:py-12 lg:py-14 bg-canvas" aria-label="Our Promise">
+        <div className="max-w-[1200px] mx-auto px-6 sm:px-8 lg:px-8 xl:px-0">
+          {/* Main Card Container */}
+          <div className="bg-surface rounded-[24px] border border-[#EDE8E0] px-6 py-12 md:px-10 md:py-16">
+            {/* Heading */}
+            <div className="text-center mb-10 md:mb-12">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted">
+                Our Promise
+              </p>
+              <h2
+                className="font-display text-ink mt-3 leading-[1.25] text-[24px] sm:text-[28px] md:text-[32px]"
+              >
+                Thoughtful in every detail.<br />
+                Conscious in every choice.
+              </h2>
+            </div>
+
+            {/* Promise Items Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-0">
+              {promiseValues.map((val, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1, duration: 0.5 }}
+                  className={`text-center px-4 md:px-6 lg:px-8 py-4 md:py-0 ${
+                    i > 0 ? 'md:border-l md:border-[#EDE8E0]' : ''
+                  }`}
+                >
+                  {/* Icon rendered directly on card background */}
+                  {val.icon}
+                  <h3 className="text-[14px] md:text-[15px] font-semibold text-ink tracking-wide mt-2">
+                    {val.title}
+                  </h3>
+                  <p className="text-[12px] text-muted leading-relaxed mt-3 max-w-[240px] mx-auto">
+                    {val.desc}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          SECTION 4: CRAFTED WITH CARE
+          ══════════════════════════════════════════════════════ */}
+      <section className="py-10 sm:py-12 lg:py-16 bg-canvas" aria-label="Crafted with care">
+        <div className="max-w-[1200px] mx-auto px-6 sm:px-8 lg:px-8 xl:px-0">
+          <div className="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-10">
+
+            {/* Left — Sewing machine image */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="w-full lg:w-[35%] aspect-[4/3] lg:aspect-square bg-surface rounded-2xl overflow-hidden shadow-sm"
+              className="w-full lg:w-[30%] rounded-2xl overflow-hidden bg-surface"
             >
               <img
-                src="/embroidery-hand.png"
-                alt="Handcrafted custom embroidery Aarav"
-                className="w-full h-full object-cover"
+                src="/sewing-machine.png"
+                alt="Custom embroidery on sewing machine"
+                className="w-full h-full object-cover aspect-[3/4] lg:aspect-auto"
                 loading="lazy"
               />
             </motion.div>
 
-            {/* Middle story content */}
+            {/* Middle — Story content */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="w-full lg:w-[35%] flex flex-col justify-center"
+              className="w-full lg:w-[38%] flex flex-col justify-center"
             >
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sage">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted">
                 Crafted with Care
               </p>
-              <h2 className="font-display text-[32px] lg:text-[40px] text-ink mt-3 leading-[1.2]">
+              <h2
+                className="font-display text-ink mt-4 leading-[1.15]"
+                style={{ fontSize: 'clamp(26px, 3vw, 38px)' }}
+              >
                 From soft fabric to<br />forever memories.
               </h2>
-              <p className="text-[13px] text-muted leading-relaxed mt-6">
+              <p className="text-[13px] text-muted leading-[1.85] mt-6">
                 Every Orkidoz piece goes through a journey of care – from selecting the finest organic fabrics to the last stitch. We believe the little things matter. The feel, the finish, the emotion behind every piece.
               </p>
               <div className="mt-8">
-                <Link to="/about-us">
-                  <Button variant="outline" className="text-[13px]">
-                    See How It's Made <ArrowRight size={16} className="ml-1" />
-                  </Button>
+                <Link
+                  to="/about-us"
+                  className="inline-flex items-center gap-2 text-sage text-[13px] font-semibold uppercase tracking-[0.1em] hover:text-sage-dark transition-colors"
+                >
+                  See How It's Made <ArrowRight size={16} />
                 </Link>
               </div>
             </motion.div>
 
-            {/* Right column value list */}
+            {/* Right — Value list */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="w-full lg:w-[30%] flex flex-col justify-center gap-8 lg:pl-10 lg:border-l lg:border-border/30"
+              className="w-full lg:w-[32%] flex flex-col justify-center gap-7 lg:pl-8 lg:border-l lg:border-border/40"
             >
               {[
                 {
                   icon: <Leaf className="text-sage" size={20} />,
-                  title: "Carefully sourced organic fabrics",
+                  title: 'Carefully sourced organic fabrics',
                 },
                 {
                   icon: <Scissors className="text-sage" size={20} />,
-                  title: "Hand-finished with love",
+                  title: 'Hand-finished with love',
                 },
                 {
                   icon: <ShieldCheck className="text-sage" size={20} />,
-                  title: "Safe for baby, kind for earth",
+                  title: 'Safe for baby, kind for earth',
                 },
               ].map((value, i) => (
                 <div key={i} className="flex items-center gap-4">
@@ -395,92 +383,62 @@ export default function Home() {
             </motion.div>
 
           </div>
+        </div>
+      </section>
 
-          {/* Values Row Container */}
-          <div className="mt-20 border border-border/50 bg-white rounded-2xl p-8 lg:p-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      {/* ══════════════════════════════════════════════════════
+          SECTION 5: OUR VALUES
+          ══════════════════════════════════════════════════════ */}
+      <section className="pb-10 sm:pb-12 lg:pb-16 bg-canvas" aria-label="Our values">
+        <div className="max-w-[1200px] mx-auto px-6 sm:px-8 lg:px-8 xl:px-0">
+          <div className="border border-border/60 bg-white rounded-2xl p-6 sm:p-8 lg:p-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
               {/* Left Title */}
               <div className="lg:col-span-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sage">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted">
                   Our Values
                 </p>
-                <h3 className="font-display text-[24px] lg:text-[28px] text-ink mt-2 leading-tight">
+                <h3
+                  className="font-display text-ink mt-2 leading-tight"
+                  style={{ fontSize: 'clamp(22px, 2.5vw, 30px)' }}
+                >
                   Guided by what matters most.
                 </h3>
               </div>
-              
+
               {/* Right Columns */}
-              <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+              <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8">
                 {[
                   {
-                    color: "bg-[#4A6741]",
-                    title: "Nurture",
-                    desc: "We nurture little ones with softness, love and care.",
+                    color: 'bg-sage',
+                    title: 'Nurture',
+                    desc: 'We nurture little ones with softness, love and care.',
                   },
                   {
-                    color: "bg-[#B8863F]",
-                    title: "Discover",
-                    desc: "We inspire little minds to discover the world.",
+                    color: 'bg-gold',
+                    title: 'Discover',
+                    desc: 'We inspire little minds to discover the world.',
                   },
                   {
-                    color: "bg-[#8C6D58]",
-                    title: "Grow",
-                    desc: "We grow with your child, celebrating every milestone.",
+                    color: 'bg-[#8C6D58]',
+                    title: 'Grow',
+                    desc: 'We grow with your child, celebrating every milestone.',
                   },
                 ].map((val, i) => (
-                  <div key={i} className="flex flex-col gap-1">
+                  <div key={i} className="flex flex-col gap-1.5">
                     <div className="flex items-center gap-2">
                       <span className={`w-2.5 h-2.5 rounded-full ${val.color}`} />
-                      <h4 className="text-[13px] font-semibold uppercase tracking-wider text-ink">
+                      <h4 className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink">
                         {val.title}
                       </h4>
                     </div>
-                    <p className="text-[12px] text-muted leading-relaxed mt-1">
+                    <p className="text-[12px] text-muted leading-relaxed mt-0.5">
                       {val.desc}
                     </p>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ══ TESTIMONIALS ══ */}
-      <section className="py-24 bg-surface" aria-label="Customer testimonials">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-8 xl:px-0">
-          <div className="text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sage">
-              Customer Stories
-            </p>
-            <h2 className="font-display text-h2 text-ink mt-3 leading-[1.15]">
-              Loved by little ones<br />and their families.
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-14">
-            {testimonials.map((t, i) => (
-              <motion.article
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="bg-white rounded-2xl p-8 shadow-sm"
-              >
-                <div className="flex gap-0.5">
-                  {[...Array(5)].map((_, j) => (
-                    <Star key={j} size={14} className="fill-gold text-gold" />
-                  ))}
-                </div>
-                <p className="font-display italic text-[15px] text-ink leading-relaxed mt-4">
-                  "{t.quote}"
-                </p>
-                <p className="text-[13px] font-medium text-ink mt-6">{t.author}</p>
-                <p className="text-[12px] text-muted">{t.role}</p>
-              </motion.article>
-            ))}
           </div>
         </div>
       </section>
